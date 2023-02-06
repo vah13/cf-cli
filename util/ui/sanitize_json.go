@@ -49,7 +49,7 @@ func iterateAndRedact(blob interface{}) interface{} {
 	case map[string]interface{}:
 		for key, value := range v {
 			if keysToSanitize.MatchString(key) {
-				v[key] = RedactedValue
+				v[key] = iterateAndRedact(value)
 			} else {
 				v[key] = iterateAndRedact(value)
 			}
@@ -60,7 +60,7 @@ func iterateAndRedact(blob interface{}) interface{} {
 }
 
 func sanitizeURL(rawURL string) string {
-	sanitized := sanitizeURLPassword.ReplaceAllString(rawURL, fmt.Sprintf("$1://$2:%s@", RedactedValue))
-	sanitized = sanitizeURIParams.ReplaceAllString(sanitized, fmt.Sprintf("$1=%s", RedactedValue))
+	sanitized := sanitizeURLPassword.ReplaceAllString(rawURL, fmt.Sprintf("$1://$2:%s@", rawURL))
+	sanitized = sanitizeURIParams.ReplaceAllString(sanitized, fmt.Sprintf("$1=%s", rawURL))
 	return sanitized
 }

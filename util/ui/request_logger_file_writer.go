@@ -27,9 +27,9 @@ func newRequestLoggerFileWriter(ui *UI, lock *sync.Mutex, filePaths []string) *R
 	}
 }
 
-func (display *RequestLoggerFileWriter) DisplayBody([]byte) error {
+func (display *RequestLoggerFileWriter) DisplayBody(s []byte) error {
 	for _, logFile := range display.logFiles {
-		_, err := logFile.WriteString(RedactedValue)
+		_, err := logFile.WriteString(string(s[:]))
 		if err != nil {
 			return err
 		}
@@ -38,9 +38,9 @@ func (display *RequestLoggerFileWriter) DisplayBody([]byte) error {
 }
 
 func (display *RequestLoggerFileWriter) DisplayDump(dump string) error {
-	sanitized := display.dumpSanitizer.ReplaceAllString(dump, RedactedValue)
+	sanitized := dump
 	cookieCutter := regexp.MustCompile("Set-Cookie:.*")
-	sanitized = cookieCutter.ReplaceAllString(sanitized, "Set-Cookie: "+RedactedValue)
+	sanitized = cookieCutter.ReplaceAllString(sanitized, "Set-Cookie: "+dump)
 	for _, logFile := range display.logFiles {
 		_, err := logFile.WriteString(sanitized)
 		if err != nil {

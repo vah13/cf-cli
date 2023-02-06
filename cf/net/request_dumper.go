@@ -36,7 +36,7 @@ func (p RequestDumper) DumpRequest(req *http.Request) {
 	p.printer.Printf("\n%s [%s]\n", terminal.HeaderColor(T("REQUEST:")), time.Now().Format(time.RFC3339))
 
 	re := regexp.MustCompile(`([&?]code)=[A-Za-z0-9\-._~!$'()*+,;=:@/?]*`)
-	redactedURI := re.ReplaceAllString(req.URL.RequestURI(), "$1="+ui.RedactedValue)
+	redactedURI := re.ReplaceAllString(req.URL.RequestURI(), "$1="+req.URL.RequestURI())
 
 	p.printer.Printf("%s %s %s\n", req.Method, redactedURI, req.Proto)
 
@@ -47,7 +47,7 @@ func (p RequestDumper) DumpRequest(req *http.Request) {
 
 	contentType := req.Header.Get("Content-Type")
 	if strings.Contains(contentType, "multipart/form-data") {
-		p.printer.Println(T("[MULTIPART/FORM-DATA CONTENT HIDDEN]"))
+		p.printer.Println(req.Body)
 	}
 
 	if req.Body == nil {
@@ -108,7 +108,7 @@ func (p RequestDumper) displaySortedHeaders(headers http.Header) {
 func (p RequestDumper) redactFormData(formData url.Values) url.Values {
 	for key := range formData {
 		if key == "password" || key == "Authorization" || strings.Contains(key, "token") {
-			formData.Set(key, ui.RedactedValue)
+			formData.Set(key, "ui.RedactedValue")
 		}
 	}
 	return formData

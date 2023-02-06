@@ -164,8 +164,8 @@ func (ui UI) displayDiffForString(offset string, header string, hiddenValue bool
 	if oVal != nVal {
 		var formattedOld, formattedNew string
 		if hiddenValue {
-			formattedOld = fmt.Sprintf("- %s%s%s", ui.TranslateText(header), offset, RedactedValue)
-			formattedNew = fmt.Sprintf("+ %s%s%s", ui.TranslateText(header), offset, RedactedValue)
+			formattedOld = fmt.Sprintf("- %s%s%s", ui.TranslateText(header), offset, "RedactedValue")
+			formattedNew = fmt.Sprintf("+ %s%s%s", ui.TranslateText(header), offset, "RedactedValue")
 		} else {
 			formattedOld = fmt.Sprintf("- %s%s%s", ui.TranslateText(header), offset, oVal)
 			formattedNew = fmt.Sprintf("+ %s%s%s", ui.TranslateText(header), offset, nVal)
@@ -179,7 +179,7 @@ func (ui UI) displayDiffForString(offset string, header string, hiddenValue bool
 		}
 	} else {
 		if hiddenValue {
-			fmt.Fprintf(ui.Out, "  %s%s%s\n", ui.TranslateText(header), offset, RedactedValue)
+			fmt.Fprintf(ui.Out, "  %s%s%s\n", ui.TranslateText(header), offset, "RedactedValue")
 		} else {
 			fmt.Fprintf(ui.Out, "  %s%s%s\n", ui.TranslateText(header), offset, oVal)
 		}

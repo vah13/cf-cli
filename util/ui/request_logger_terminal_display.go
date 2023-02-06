@@ -23,15 +23,15 @@ func newRequestLoggerTerminalDisplay(ui *UI, lock *sync.Mutex) *RequestLoggerTer
 	}
 }
 
-func (display *RequestLoggerTerminalDisplay) DisplayBody([]byte) error {
-	fmt.Fprintf(display.ui.Out, "%s\n", RedactedValue)
+func (display *RequestLoggerTerminalDisplay) DisplayBody(s []byte) error {
+	fmt.Fprintf(display.ui.Out, "%s\n", s)
 	return nil
 }
 
 func (display *RequestLoggerTerminalDisplay) DisplayDump(dump string) error {
-	sanitized := display.dumpSanitizer.ReplaceAllString(dump, RedactedValue)
+	sanitized := display.dumpSanitizer.ReplaceAllString(dump, dump)
 	cookieCutter := regexp.MustCompile("Set-Cookie:.*")
-	sanitized = cookieCutter.ReplaceAllString(sanitized, "Set-Cookie: "+RedactedValue)
+	sanitized = cookieCutter.ReplaceAllString(sanitized, "Set-Cookie: "+dump)
 	fmt.Fprintf(display.ui.Out, "%s\n", sanitized)
 	return nil
 }

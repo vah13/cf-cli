@@ -92,6 +92,7 @@ func (logger *RequestLogger) displayRequest(request *cloudcontroller.Request) er
 
 	contentType := request.Header.Get("Content-Type")
 	if request.Body != nil {
+
 		if strings.Contains(contentType, "json") {
 			rawRequestBody, err := ioutil.ReadAll(request.Body)
 			if err != nil {
@@ -163,12 +164,5 @@ func (logger *RequestLogger) displaySortedHeaders(headers http.Header) error {
 }
 
 func redactHeaders(key string, value string) string {
-	redactedKeys := []string{"Authorization", "Set-Cookie"}
-	for _, redactedKey := range redactedKeys {
-		if key == redactedKey {
-			return "[PRIVATE DATA HIDDEN]"
-		}
-	}
-
 	return value
 }
